@@ -1,0 +1,30 @@
+{
+  "name": "bc-tools",
+  "version": "1.0.0",
+  "description": "Bulletcode tools",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "workspaces": [
+    "packages/common",
+    "packages/dotnet",
+    "packages/wordpress"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mimecorg/bc-tools.git"
+  },
+  "keywords": [
+    "bulletcode",
+    "tools",
+    "dotnet",
+    "wordpress"
+  ],
+  "author": "Bulletcode",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mimecorg/bc-tools/issues"
+  },
+  "homepage": "https://github.com/mimecorg/bc-tools"
+}

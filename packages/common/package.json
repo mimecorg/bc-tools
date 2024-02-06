@@ -1,0 +1,32 @@
+{
+  "name": "bc-tools-common",
+  "version": "1.0.0",
+  "description": "Bulletcode common tools",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "exports": "./index.js",
+  "files": [
+    "src",
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mimecorg/bc-tools.git"
+  },
+  "keywords": [
+    "bulletcode",
+    "tools"
+  ],
+  "author": "Bulletcode",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mimecorg/bc-tools/issues"
+  },
+  "homepage": "https://github.com/mimecorg/bc-tools",
+  "dependencies": {
+    "bc-gettext-utils": "^1.1.1",
+    "gettext-parser": "^7.0.1"
+  }
+}
