@@ -8,8 +8,7 @@
   },
   "exports": "./index.js",
   "bin": {
-    "bc-wp-build": "bin/bc-wp-build.js",
-    "bc-wp-i18n": "bin/bc-wp-i18n.js"
+    "bc-wp-build": "bin/bc-wp-build.js"
   },
   "files": [
     "bin",

@@ -7,7 +7,11 @@
     "node": ">=18.0.0"
   },
   "exports": "./index.js",
+  "bin": {
+    "bc-i18n": "bin/bc-i18n.js"
+  },
   "files": [
+    "bin",
     "src",
     "index.js"
   ],
