@@ -1,6 +1,6 @@
 {
   "name": "bc-tools-dotnet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Bulletcode .NET tools",
   "type": "module",
   "engines": {
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/mimecorg/bc-tools",
   "dependencies": {
-    "bc-tools-common": "^1.0.0",
+    "bc-tools-common": "^2.0.0",
     "glob": "^10.3.10"
   }
 }
