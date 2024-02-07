@@ -8,7 +8,7 @@
   },
   "exports": "./index.js",
   "bin": {
-    "bc-wp-build": "bin/bc-wp-build.js"
+    "bc-build": "bin/bc-build.js"
   },
   "files": [
     "bin",
@@ -34,10 +34,8 @@
     "@vitejs/plugin-vue": "^5.0.3",
     "acorn": "^8.11.3",
     "autoprefixer": "^10.4.17",
-    "bc-gettext-utils": "^1.1.1",
     "bc-tools-common": "^1.0.0",
     "es-module-lexer": "^1.4.1",
-    "glob": "^10.3.10",
     "json2php": "^0.0.7",
     "magic-string": "^0.30.5",
     "postcss": "^8.4.33",

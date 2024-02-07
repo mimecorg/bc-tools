@@ -3,7 +3,7 @@
 import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
-import { buildAllPackages } from '../src/build.js';
+import { buildAllProjects } from '../src/build.js';
 
 const rootPath = process.cwd();
 
@@ -47,10 +47,10 @@ process.env.NODE_ENV = mode;
 
 const buildConfig = await load( configPath || 'build.config.js' );
 
-await buildAllPackages( buildConfig, rootPath, { watch, mode, sourcemap, minify } );
+await buildAllProjects( buildConfig, rootPath, { watch, mode, sourcemap, minify } );
 
 function help() {
-  console.log( 'Usage: bc-wp-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]' );
+  console.log( 'Usage: bc-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]' );
 
   process.exit( 1 );
 }

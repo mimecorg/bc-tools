@@ -1,6 +1,5 @@
-export { makePackages } from './src/packages.js';
+export { cssCharset, makeWordPressProjects } from 'bc-tools-common';
 
-export { cssCharset } from 'bc-tools-common';
 export { generateImports } from './src/plugins/generate-imports.js';
 export { jsAsJsx } from './src/plugins/js-as-jsx.js';
 export { splitChunks } from './src/plugins/split-chunks.js';

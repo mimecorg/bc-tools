@@ -5,18 +5,18 @@ import autoprefixer from 'autoprefixer';
 import { build, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-import { cssCharset, generateImports, jsAsJsx, makePackages, splitChunks, wpExternals, wrapInIife } from '../index.js';
+import { cssCharset, generateImports, jsAsJsx, makeWordPressProjects, splitChunks, wpExternals, wrapInIife } from '../index.js';
 
-export async function buildAllPackages( buildConfig, rootPath, buildOptions ) {
-  const packages = makePackages( buildConfig )
+export async function buildAllProjects( buildConfig, rootPath, buildOptions ) {
+  const projects = makeWordPressProjects( buildConfig )
     .filter( p => p.scripts.length > 0 || p.styles.length > 0 );
 
-  for ( const _package of packages ) {
-    console.log( `Building ${_package.packagePath}...` );
+  for ( const project of projects ) {
+    console.log( `Building ${project.projectPath}...` );
 
-    const config = makePackageConfig( _package, buildConfig, rootPath, buildOptions );
+    const config = makeProjectConfig( project, buildConfig, rootPath, buildOptions );
 
-    await buildPackage( config );
+    await buildProject( config );
   }
 
   if ( buildConfig.extras != null ) {
@@ -26,22 +26,22 @@ export async function buildAllPackages( buildConfig, rootPath, buildOptions ) {
       const makeConfig = await load( configPath, rootPath );
       const config = makeConfig( buildConfig, buildOptions );
 
-      await buildPackage( config );
+      await buildProject( config );
     }
   }
 }
 
-function makePackageConfig( _package, buildConfig, rootPath, buildOptions ) {
-  const { packageName, packagePath, packageType, scripts, styles, imports, options } = _package;
+function makeProjectConfig( project, buildConfig, rootPath, buildOptions ) {
+  const { projectName, projectPath, projectType, scripts, styles, imports, options } = project;
   const { injectPolyfill, customExternals, codeSplitting } = options;
 
   const { watch, mode, sourcemap, minify } = buildOptions;
 
   const input = [];
   for ( const script of scripts )
-    input.push( join( packagePath, 'src', script ) );
+    input.push( join( projectPath, 'src', script ) );
   for ( const style of styles )
-    input.push( join( packagePath, 'src', style ) );
+    input.push( join( projectPath, 'src', style ) );
 
   return defineConfig( {
     mode,
@@ -49,7 +49,7 @@ function makePackageConfig( _package, buildConfig, rootPath, buildOptions ) {
     base: './',
     publicDir: false,
     build: {
-      outDir: join( packagePath, 'assets' ),
+      outDir: join( projectPath, 'assets' ),
       assetsDir: '',
       rollupOptions: {
         input,
@@ -60,7 +60,7 @@ function makePackageConfig( _package, buildConfig, rootPath, buildOptions ) {
     },
     resolve: {
       alias: {
-        '@': join( rootPath, packagePath, 'src' ),
+        '@': join( rootPath, projectPath, 'src' ),
         '@wp-admin': join( rootPath, buildConfig.paths.wordpress, '/wp-admin' ),
         '@wp-includes': join( rootPath, buildConfig.paths.wordpress, '/wp-includes' ),
         '@wp-content': join( rootPath, buildConfig.paths.content ),
@@ -75,7 +75,7 @@ function makePackageConfig( _package, buildConfig, rootPath, buildOptions ) {
       jsAsJsx(),
       vue(),
       wpExternals( {
-        prefix: packageType == 'theme' ? 'bc-theme' : packageName,
+        prefix: projectType == 'theme' ? 'bc-theme' : projectName,
         injectPolyfill,
         customExternals,
       } ),
@@ -87,7 +87,7 @@ function makePackageConfig( _package, buildConfig, rootPath, buildOptions ) {
   } );
 }
 
-async function buildPackage( config ) {
+async function buildProject( config ) {
   const result = await build( config );
 
   if ( config.build.watch ) {
