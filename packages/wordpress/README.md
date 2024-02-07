@@ -3,46 +3,22 @@
 A collection of tools for WordPress projects created by Bulletcode.
 
 
-## Tools
+## Commands
 
 ```
-bc-wp-i18n update [CONFIG]
+bc-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]
 ```
 
-Update .po files from sources.
-
-```
-bc-wp-i18n build [CONFIG]
-```
-
-Create .mo and .json files from .po files.
-
-```
-bc-wp-i18n comments add [SRC_PO_FILE] [DEST_PO_FILE]
-```
-
-Add translations from source .po file as comments to destination .po file.
-
-```
-bc-wp-i18n comments remove [PO_FILE]
-```
-
-Remove comments from .po file.
-
-```
-bc-wp-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]
-```
-
-Build plugin and theme assets using Vite.
+Build plugin and theme assets using Vite. The path of a configuration file relative to the project root can be specified, by default it's `build.config.js`. Assets are built in production mode unless the `--dev` flag is specified. If `--watch` is used, assets are automatically rebuilt when source files are modified.
 
 
 ## Configuration
 
 ### build.config.js
 
-This file contains plugins and themes containing assets to build and information about languages, for example:
+This file contains information about WordPress plugins and themes and supported languages, for example:
 
-```
+```js
 export default {
   paths: {
     wordpress: 'web/wp',
@@ -73,43 +49,43 @@ export default {
 
 ## API
 
-```
-makePackages( config )
+```js
+makeWordPressProjects( config )
 ```
 
 Return a list of plugins and themes based on the given configuration.
 
-```
+```js
 jsAsJsx()
 ```
 
 Vite plugin with interprets .js files as .jsx files and automatically adds imports from `"@wordpress/element"`.
 
-```
+```js
 wpExternals( { prefix, injectPolyfill = false, customExternals = null } )
 ```
 
 Vite plugin which converts WordPress imports and optionally custom externals to global variables and generates the `assets.php` file containing script dependencies.
 
-```
+```js
 splitChunks( { main, shared, vendors, mainVar, sharedVar, vendorsVar } )
 ```
 
 Vite plugin which implements custom code splitting based on global variables.
 
-```
+```js
 wrapInIife( mode = null )
 ```
 
 Vite plugin which wraps the scripts in an IIFE expression, or optionally, a `DOMContentLoaded` event handler.
 
-```
+```js
 cssCharset()
 ```
 
 Vite plugin which prepends `@charset "UTF-8";` to CSS files if necessary.
 
-```
+```js
 generateImports( imports )
 ```
 
