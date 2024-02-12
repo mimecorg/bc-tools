@@ -48,7 +48,7 @@ async function processDomain( projectName, rootPath, domain, pattern, ignore, la
   const builder = translationBuilder();
 
   for ( const file of files ) {
-    const ext = extname( file ).slice( 1 ).toLocaleLowerCase();
+    let ext = extname( file ).slice( 1 ).toLocaleLowerCase();
     if ( extensions != null && extensions[ ext ] != null )
       ext = extensions[ ext ];
     if ( extractors[ ext ] != null ) {
