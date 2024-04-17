@@ -1,6 +1,6 @@
 {
   "name": "bc-tools-common",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Bulletcode common tools",
   "type": "module",
   "engines": {
