@@ -21,18 +21,20 @@ export async function buildAllTranslations( config, rootPath ) {
 }
 
 async function buildDotNetTranslations( project, rootPath, languages ) {
-  const { projectName, domain } = project;
+  await processDomain( project, '', rootPath, languages );
+  await processDomain( project, '.js', rootPath, languages );
+}
+
+async function processDomain( project, suffix, rootPath, languages ) {
+  const { projectName, domain, translations } = project;
 
   const languagesPath = join( rootPath, projectName, 'languages' );
 
-  await processDomain( domain, languagesPath, languages );
-  await processDomain( domain + '.js', languagesPath, languages );
-}
-
-async function processDomain( domain, languagesPath, languages ) {
   for ( const language of languages ) {
-    const name = `${domain}.${language.name}`;
-    await buildMoFile( name, languagesPath );
+    if ( translations.includes( language.name ) ) {
+      const name = `${domain}${suffix}.${language.name}`;
+      await buildMoFile( name, languagesPath );
+    }
   }
 }
 

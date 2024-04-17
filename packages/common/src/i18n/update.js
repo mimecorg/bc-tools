@@ -35,13 +35,13 @@ export async function updateAllTranslations( config, rootPath ) {
 }
 
 async function updateDotNetTranslations( project, rootPath, languages, extensions ) {
-  const { projectName, domain } = project;
-
-  await processDomain( projectName, rootPath, domain, '**', [ 'bin/**', 'obj/**', 'publish/**', 'src/**', 'wwwroot/**' ], languages, extensions );
-  await processDomain( projectName, rootPath, domain + '.js', 'src/**', [], languages, extensions );
+  await processDomain( project, rootPath, '', '**', [ 'bin/**', 'obj/**', 'publish/**', 'src/**', 'wwwroot/**' ], languages, extensions );
+  await processDomain( project, rootPath, '.js', 'src/**', [], languages, extensions );
 }
 
-async function processDomain( projectName, rootPath, domain, pattern, ignore, languages, extensions ) {
+async function processDomain( project, rootPath, suffix, pattern, ignore, languages, extensions ) {
+  const { projectName, domain, translations, filter } = project;
+
   const files = await glob( pattern, { cwd: join( rootPath, projectName ), ignore, nodir: true, posix: true } );
   files.sort( (a, b) => a.localeCompare( b, undefined, { sensitivity: 'base' } ) );
 
@@ -60,13 +60,15 @@ async function processDomain( projectName, rootPath, domain, pattern, ignore, la
   const languagesPath = join( rootPath, projectName, 'languages' );
 
   for ( const language of languages ) {
-    const name = `${domain}.${language.name}`;
-    await updateOrCreatePoFile( name, projectName, languagesPath, builder, language );
+    if ( translations.includes( language.name ) ) {
+      const name = `${domain}${suffix}.${language.name}`;
+      await updateOrCreatePoFile( name, projectName, languagesPath, builder, language, filter );
+    }
   }
 }
 
 async function updateWordPressTranslations( project, rootPath, languages ) {
-  const { projectName, projectPath, projectType, translations } = project;
+  const { projectName, projectPath, projectType, translations, filter } = project;
 
   const files = await glob( '**', { cwd: join( rootPath, projectPath ), ignore: [ 'assets/**' ], nodir: true, posix: true } );
   files.sort( (a, b) => a.localeCompare( b, undefined, { sensitivity: 'base' } ) );
@@ -86,12 +88,12 @@ async function updateWordPressTranslations( project, rootPath, languages ) {
   for ( const language of languages ) {
     if ( translations.includes( language.name ) ) {
       const name = projectType == 'theme' ? language.name : `${projectName}-${language.name}`;
-      await updateOrCreatePoFile( name, projectName, languagesPath, builder, language );
+      await updateOrCreatePoFile( name, projectName, languagesPath, builder, language, filter );
     }
   }
 }
 
-async function updateOrCreatePoFile( name, projectName, languagesPath, builder, language ) {
+async function updateOrCreatePoFile( name, projectName, languagesPath, builder, language, filter ) {
   const poFile = `${name}.po`;
 
   const poPath = join( languagesPath, poFile );
@@ -110,11 +112,13 @@ async function updateOrCreatePoFile( name, projectName, languagesPath, builder, 
   let headers;
   let mergedTranslations;
   let statusMessage;
+  
+  const filteredTranslations = filter != null ? filter( builder.translations, language.name ) : builder.translations;
 
   if ( existingPo != null ) {
     const existingData = po.parse( existingPo );
 
-    const { translations, added, updated, deleted } = mergeTranslations( existingData.translations, builder.translations );
+    const { translations, added, updated, deleted } = mergeTranslations( existingData.translations, filteredTranslations );
 
     if ( added == 0 && updated == 0 && deleted == 0 )
       return false;
@@ -124,7 +128,9 @@ async function updateOrCreatePoFile( name, projectName, languagesPath, builder, 
 
     statusMessage = `Updated ${poFile} (${added} added/${updated} updated/${deleted} deleted messages)`;
   } else {
-    if ( builder.count == 0 )
+    const count = filter != null ? Object.values( filteredTranslations ).reduce( ( sum, o ) => sum + Object.values( o ).length, 0 ) : builder.count;
+
+    if ( count == 0 )
       return false;
 
     headers = {
@@ -136,9 +142,9 @@ async function updateOrCreatePoFile( name, projectName, languagesPath, builder, 
       'Plural-Forms': `nplurals=${nplurals}; plural=(${plural});`,
     };
 
-    mergedTranslations = builder.translations;
+    mergedTranslations = filteredTranslations;
 
-    statusMessage = `Created ${poFile} (${builder.count} messages)`;
+    statusMessage = `Created ${poFile} (${count} messages)`;
   }
 
   const translations = normalizePlurals( mergedTranslations, nplurals );

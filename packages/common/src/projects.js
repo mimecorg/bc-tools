@@ -4,15 +4,27 @@ export function makeDotNetProjects( config ) {
   const projects = [];
 
   if ( config.projects != null ) {
-    for ( const project of config.projects ) {
-      if ( typeof project == 'string' )
-        projects.push( { projectName: project, domain: project } );
-      else
-        projects.push( { projectName: project.name, domain: project.domain } );
-    }
+    for ( const project of config.projects )
+      projects.push( makeDotNetProject( project, config.languages ) );
   }
 
   return projects;
+}
+
+function makeDotNetProject( project, languages ) {
+  if ( typeof project == 'string' )
+    project = { name: project };
+
+  if ( project.projectName == null )
+    project.projectName = project.name;
+
+  if ( project.domain == null )
+    project.domain = project.name;
+
+  if ( project.translations == null )
+    project.translations = languages.map( lang => lang.name );
+
+  return project;
 }
 
 export function makeWordPressProjects( config ) {
