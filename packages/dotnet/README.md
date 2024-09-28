@@ -57,3 +57,9 @@ cssCharset()
 ```
 
 Vite plugin which prepends `@charset "UTF-8";` to CSS files if necessary.
+
+```js
+projectAliases( projectPath, aliases )
+```
+
+Vite plugin which creates symbolic links for project aliases returned by the `resolveProjectAliases()` function.
