@@ -1,10 +1,10 @@
-import { readlink, symlink, unlink } from 'fs/promises';
+import { mkdir, readlink, symlink, unlink } from 'fs/promises';
 import { join } from 'path';
 
 import { resolveProjectAliases } from '../aliases.js';
 
 const rootPath = process.cwd();
-const nodeModulesPath = join( rootPath, 'node_modules' );
+const depsPath = join( rootPath, '.deps' );
 
 export function projectAliases( projectPath, aliases ) {
   return {
@@ -16,7 +16,9 @@ export function projectAliases( projectPath, aliases ) {
       const resolvedAliases = resolveProjectAliases( projectPath, aliases );
 
       for ( const [ name, target ] of Object.entries( resolvedAliases ) ) {
-        const linkPath = join( nodeModulesPath, name );
+        await mkdir( depsPath, { recursive: true } );
+
+        const linkPath = join( depsPath, name );
 
         let existingTarget = null;
 
@@ -33,7 +35,7 @@ export function projectAliases( projectPath, aliases ) {
           await symlink( target, linkPath, 'dir' );
         }
 
-        alias[ name ] = join( linkPath );
+        alias[ name ] = linkPath;
       }
 
       return {
