@@ -1,7 +1,7 @@
 import { mkdir, readlink, symlink, unlink } from 'fs/promises';
 import { join } from 'path';
 
-import { resolveProjectAliases } from '../aliases.js';
+import { resolveProjectAliases } from '../projects.js';
 
 const rootPath = process.cwd();
 const depsPath = join( rootPath, '.deps' );
