@@ -47,7 +47,20 @@ process.env.NODE_ENV = mode;
 
 const buildConfig = await load( configPath || 'build.config.js' );
 
-await buildAllProjects( buildConfig, rootPath, { watch, mode, sourcemap, minify } );
+const results = await buildAllProjects( buildConfig, rootPath, { watch, mode, sourcemap, minify } );
+
+if ( watch ) {
+  process.stdin.setRawMode( true );
+  process.stdin.setEncoding( 'utf-8' );
+
+  process.stdin.on( 'data', ch => {
+    if ( ch == 'q' || ch == '\x03' ) {
+      process.stdin.pause();
+      for ( const result of results )
+        result.close();
+    }
+  } );
+}
 
 function help() {
   console.log( 'Usage: bc-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]' );

@@ -8,6 +8,8 @@ import vue from '@vitejs/plugin-vue';
 import { cssCharset, generateImports, jsAsJsx, makeWordPressProjects, splitChunks, wpExternals, wrapInIife } from '../index.js';
 
 export async function buildAllProjects( buildConfig, rootPath, buildOptions ) {
+  const results = [];
+
   const projects = makeWordPressProjects( buildConfig )
     .filter( p => p.scripts.length > 0 || p.styles.length > 0 );
 
@@ -16,7 +18,7 @@ export async function buildAllProjects( buildConfig, rootPath, buildOptions ) {
 
     const config = makeProjectConfig( project, buildConfig, rootPath, buildOptions );
 
-    await buildProject( config );
+    results.push( await buildProject( config ) );
   }
 
   if ( buildConfig.extras != null ) {
@@ -26,9 +28,11 @@ export async function buildAllProjects( buildConfig, rootPath, buildOptions ) {
       const makeConfig = await load( configPath, rootPath );
       const config = makeConfig( buildConfig, buildOptions );
 
-      await buildProject( config );
+      results.push( await buildProject( config ) );
     }
   }
+
+  return results;
 }
 
 function makeProjectConfig( project, buildConfig, rootPath, buildOptions ) {
@@ -93,11 +97,11 @@ async function buildProject( config ) {
   if ( config.build.watch ) {
     let finished = false;
 
-    await new Promise( ( resolve, reject ) => {
+    return new Promise( resolve => {
       result.on( 'event', event => {
         if ( event.code == 'END' && !finished ) {
           finished = true;
-          resolve();
+          resolve( result );
         }
       } );
     } );
