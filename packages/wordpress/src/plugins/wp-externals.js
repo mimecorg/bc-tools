@@ -104,7 +104,7 @@ export function wpExternals( { prefix, injectPolyfill = false, customExternals =
         }
       }
 
-      const format = json2php.make( { shortArraySyntax: true } );
+      const format = json2php.make( { shortArraySyntax: true, stripSpaces: true } );
 
       this.emitFile( {
         type: 'asset',
