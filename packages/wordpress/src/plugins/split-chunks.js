@@ -16,11 +16,11 @@ export function splitChunks( { main, shared, vendors, mainVar, sharedVar, vendor
                 if ( id == '\0commonjsHelpers.js' || id == '\0plugin-vue:export-helper' )
                   return vendors || shared || main;
 
-                if ( !id.match( /\.(js|mjs|cjs|vue)$/ ) )
-                  return;
-
                 if ( vendors != null && id.includes( 'node_modules' ) )
                   return vendors;
+
+                if ( !id.match( /\.(js|mjs|cjs|vue)$/ ) )
+                  return;
 
                 const modules = [ id ];
                 const entries = [];
