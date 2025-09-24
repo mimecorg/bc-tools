@@ -71,6 +71,11 @@ function makeProjectConfig( project, buildConfig, rootPath, buildOptions ) {
       },
     },
     css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: [ 'color-functions', 'global-builtin', 'import' ],
+        },
+      },
       postcss: {
         plugins: [ autoprefixer ],
       },
