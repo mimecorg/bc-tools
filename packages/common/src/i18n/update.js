@@ -21,8 +21,10 @@ export async function updateAllTranslations( config, rootPath ) {
   if ( config.projects != null ) {
     const projects = makeDotNetProjects( config );
 
+    const extensions = { jsx: 'js', ...config.extensions };
+
     for ( const project of projects )
-      await updateDotNetTranslations( project, rootPath, config.languages, config.extensions );
+      await updateDotNetTranslations( project, rootPath, config.languages, extensions );
   } else {
     const projects = makeWordPressProjects( config );
 
@@ -49,7 +51,7 @@ async function processDomain( project, rootPath, suffix, pattern, ignore, langua
 
   for ( const file of files ) {
     let ext = extname( file ).slice( 1 ).toLocaleLowerCase();
-    if ( extensions != null && extensions[ ext ] != null )
+    if ( extensions[ ext ] != null )
       ext = extensions[ ext ];
     if ( extractors[ ext ] != null ) {
       const contents = await readFile( join( rootPath, projectName, file ), 'utf-8' );
