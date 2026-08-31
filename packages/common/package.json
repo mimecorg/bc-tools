@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/mimecorg/bc-tools",
   "dependencies": {
-    "bc-gettext-utils": "^1.1.1",
-    "gettext-parser": "^7.0.1",
-    "glob": "^10.3.10"
+    "bc-gettext-utils": "^2.0.0",
+    "gettext-parser": "^9.1.1",
+    "glob": "^13.0.6"
   }
 }

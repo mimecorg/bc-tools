@@ -32,6 +32,6 @@
   "homepage": "https://github.com/mimecorg/bc-tools",
   "dependencies": {
     "bc-tools-common": "^2.1.0",
-    "glob": "^10.3.10"
+    "glob": "^13.0.6"
   }
 }

@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { extname, join } from 'path';
 
-import { compareRefence, extractors, mergeTranslations, normalizePlurals, translationBuilder } from 'bc-gettext-utils';
+import { compareReference, extractors, mergeTranslations, normalizePlurals, translationBuilder } from 'bc-gettext-utils';
 import { po } from 'gettext-parser';
 import { glob } from 'glob';
 
@@ -149,7 +149,7 @@ async function updateOrCreatePoFile( name, projectName, languagesPath, builder, 
 
   const translations = normalizePlurals( mergedTranslations, nplurals );
 
-  const generatedPo = po.compile( { headers, translations }, { sort: compareRefence, eol: '\r\n' } );
+  const generatedPo = po.compile( { headers, translations }, { sort: compareReference, eol: '\r\n' } );
 
   await mkdir( languagesPath, { recursive: true } );
 

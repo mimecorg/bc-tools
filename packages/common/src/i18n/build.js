@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { basename, join } from 'path';
 
-import { compareRefence } from 'bc-gettext-utils';
+import { compareReference } from 'bc-gettext-utils';
 import { po, mo } from 'gettext-parser';
 
 import { makeDotNetProjects, makeWordPressProjects } from '../projects.js';
@@ -81,7 +81,7 @@ async function buildMoFile( name, languagesPath ) {
 
   const data = po.parse( existingPo );
 
-  const generatedPo = po.compile( data, { sort: compareRefence, eol: '\r\n' } );
+  const generatedPo = po.compile( data, { sort: compareReference, eol: '\r\n' } );
   const generatedMo = mo.compile( data );
 
   await writeFile( poPath, generatedPo );
