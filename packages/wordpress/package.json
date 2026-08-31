@@ -34,7 +34,7 @@
     "@vitejs/plugin-vue": "^5.2.4",
     "acorn": "^8.15.0",
     "autoprefixer": "^10.4.21",
-    "bc-tools-common": "^2.1.0",
+    "bc-tools-common": "^2.2.0",
     "es-module-lexer": "^1.7.0",
     "json2php": "^0.0.12",
     "magic-string": "^0.30.19",
