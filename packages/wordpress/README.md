@@ -3,15 +3,6 @@
 A collection of tools for WordPress projects created by Bulletcode.
 
 
-## Commands
-
-```
-bc-build [--watch] [--dev] [--sourcemap] [--no-minify] [CONFIG]
-```
-
-Build plugin and theme assets using Vite. The path of a configuration file relative to the project root can be specified, by default it's `build.config.js`. Assets are built in production mode unless the `--dev` flag is specified. If `--watch` is used, assets are automatically rebuilt when source files are modified.
-
-
 ## Configuration
 
 ### build.config.js
@@ -56,28 +47,16 @@ makeWordPressProjects( config )
 Return a list of plugins and themes based on the given configuration.
 
 ```js
-jsAsJsx()
+makeProjectInputs( project )
 ```
 
-Vite plugin with interprets .js files as .jsx files and automatically adds imports from `"@wordpress/element"`.
+Return a list of inputs for the given projects.
 
 ```js
-wpExternals( { prefix, injectPolyfill = false, customExternals = null } )
+wpExternals( { prefix = null, injectPolyfill = false, customExternals = null, codeSplitting = null, wrapMode = null } )
 ```
 
-Vite plugin which converts WordPress imports and optionally custom externals to global variables and generates the `assets.php` file containing script dependencies.
-
-```js
-splitChunks( { main, shared, vendors, mainVar, sharedVar, vendorsVar } )
-```
-
-Vite plugin which implements custom code splitting based on global variables.
-
-```js
-wrapInIife( mode = null )
-```
-
-Vite plugin which wraps the scripts in an IIFE expression, or optionally, a `DOMContentLoaded` event handler.
+Vite plugin which converts WordPress imports to global variables and generates the `assets.php` file containing script dependencies. It can also convert custom externals to global variables and perform code splitting using global variables. It wraps the scripts in an IIFE expression, or optionally, a `DOMContentLoaded` event handler.
 
 ```js
 cssCharset()
