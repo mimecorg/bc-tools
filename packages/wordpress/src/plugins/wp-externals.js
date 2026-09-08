@@ -210,11 +210,11 @@ function getChunkName( id, context, config, { main, shared, vendors } ) {
   if ( id == '\0commonjsHelpers.js' || id == '\0plugin-vue:export-helper' )
     return vendors || shared || main;
 
+  if ( id.match( /\.(css|scss)$/ ) )
+    return null;
+
   if ( vendors != null && id.includes( 'node_modules' ) )
     return vendors;
-
-  if ( !id.match( /\.(js|jsx|mjs|cjs|vue)$/ ) )
-    return null;
 
   const modules = [ id ];
   const entries = [];
