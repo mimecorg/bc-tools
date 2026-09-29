@@ -2,6 +2,7 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 
 import { convertMoToJs } from 'bc-tools-common';
+
 import { resolveProjectLanguages } from '../projects.js';
 
 export function bundleTranslations( projectPath, languages, projects ) {
@@ -23,15 +24,20 @@ export function bundleTranslations( projectPath, languages, projects ) {
     },
 
     async load( id ) {
-      if ( id.startsWith( 'i18n:' ) )
-        return generateI18nEntryFile( id.substring( 5 ) );
+      if ( id.startsWith( 'i18n:' ) ) {
+        const deps = [];
+        const result = generateI18nEntryFile( id.substring( 5 ), deps );
+        for ( const dep of deps )
+          this.addWatchFile( dep );
+        return result;
+      }
 
-      if ( id.match( /\.mo$/ ) )
+      if ( id.endsWith( '.mo' ) )
         return await convertMoToJs( id );
     },
   };
 
-  function generateI18nEntryFile( language ) {
+  function generateI18nEntryFile( language, deps ) {
     let imports = '';
     const mappings = [];
 
@@ -44,6 +50,8 @@ export function bundleTranslations( projectPath, languages, projects ) {
 
         imports += `import ${variableName} from '${escapedPath}';\n`;
         mappings.push( `'${domain}.js': ${variableName}` );
+
+        deps.push( moPath );
       }
     }
 
