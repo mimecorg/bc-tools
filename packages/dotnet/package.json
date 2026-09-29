@@ -1,6 +1,6 @@
 {
   "name": "bc-tools-dotnet",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Bulletcode .NET tools",
   "type": "module",
   "engines": {
