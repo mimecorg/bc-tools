@@ -5,7 +5,7 @@ import { convertMoToJs } from 'bc-tools-common';
 
 import { resolveProjectLanguages } from '../projects.js';
 
-export function bundleTranslations( projectPath, languages, projects ) {
+export function bundleTranslations( projectPath, languages, projects, { prefix = 'i18n' } = {} ) {
   let resolvedPaths;
 
   return {
@@ -15,18 +15,18 @@ export function bundleTranslations( projectPath, languages, projects ) {
       resolvedPaths = resolveProjectLanguages( projectPath, projects );
 
       for ( const language of languages )
-        this.emitFile( { type: 'chunk', id: `i18n:${language}`, name: `i18n-${language}` } );
+        this.emitFile( { type: 'chunk', id: `${prefix}:${language}`, name: `${prefix}-${language}` } );
     },
 
     resolveId( id ) {
-      if ( id.startsWith( 'i18n:' ) )
+      if ( id.startsWith( `${prefix}:` ) )
         return id;
     },
 
     async load( id ) {
-      if ( id.startsWith( 'i18n:' ) ) {
+      if ( id.startsWith( `${prefix}:` ) ) {
         const deps = [];
-        const result = generateI18nEntryFile( id.substring( 5 ), deps );
+        const result = generateI18nEntryFile( id.substring( prefix.length + 1 ), deps );
         for ( const dep of deps )
           this.addWatchFile( dep );
         return result;

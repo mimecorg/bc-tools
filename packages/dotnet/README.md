@@ -65,7 +65,7 @@ projectAliases( projectPath, aliases )
 Vite plugin which creates symbolic links for project aliases returned by the `resolveProjectAliases()` function.
 
 ```js
-bundleTranslations( projectPath, languages, projects )
+bundleTranslations( projectPath, languages, projects, options = {} )
 ```
 
 Vite plugin which generates translation files for specified languages and projects.
