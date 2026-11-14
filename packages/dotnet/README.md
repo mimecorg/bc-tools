@@ -69,3 +69,9 @@ bundleTranslations( projectPath, languages, projects, options = {} )
 ```
 
 Vite plugin which generates translation files for specified languages and projects.
+
+```js
+codeSplitting( callback )
+```
+
+Vite plugin which facilitates manual code splitting. The callback function receives the module id and an array of entries which depend on the module, and returns the chunk name.
