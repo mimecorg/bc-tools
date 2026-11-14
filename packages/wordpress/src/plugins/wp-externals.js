@@ -1,7 +1,6 @@
 import { basename, extname, relative } from 'path';
 
 import json2php from 'json2php';
-import { parseSync } from 'oxc-parser';
 import { generateTransform, rolldownString } from 'rolldown-string'
 
 const EXTERNALS = {
@@ -50,7 +49,7 @@ export function wpExternals( { prefix = null, injectPolyfill = false, customExte
       const mappedCode = rolldownString( code, 'chunk.js', meta );
 
       if ( chunk.imports.length > 0 || chunk.exports.length > 0 ) {
-        const { program } = parseSync( 'chunk.js', code );
+        const program = meta?.ast ?? this.parse( code );
 
         for ( let i = 0; i < program.body.length && program.body[ i ].type == 'ImportDeclaration'; i++ ) {
           const { start, end, source, specifiers } = program.body[ i ];
