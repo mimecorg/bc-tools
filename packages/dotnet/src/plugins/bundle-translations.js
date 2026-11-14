@@ -8,6 +8,9 @@ import { resolveProjectLanguages } from '../projects.js';
 export function bundleTranslations( projectPath, languages, projects, { prefix = 'i18n' } = {} ) {
   let resolvedPaths;
 
+  const escapedPrefix = prefix.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+  const prefixFilter = new RegExp( `^${escapedPrefix}:` );
+
   return {
     name: 'bundle-translations',
 
@@ -18,22 +21,32 @@ export function bundleTranslations( projectPath, languages, projects, { prefix =
         this.emitFile( { type: 'chunk', id: `${prefix}:${language}`, name: `${prefix}-${language}` } );
     },
 
-    resolveId( id ) {
-      if ( id.startsWith( `${prefix}:` ) )
+    resolveId: {
+      filter: {
+        id: prefixFilter,
+      },
+
+      handler( id ) {
         return id;
+      },
     },
 
-    async load( id ) {
-      if ( id.startsWith( `${prefix}:` ) ) {
-        const deps = [];
-        const result = generateI18nEntryFile( id.substring( prefix.length + 1 ), deps );
-        for ( const dep of deps )
-          this.addWatchFile( dep );
-        return result;
-      }
+    load: {
+      filter: {
+        id: [ prefixFilter, /\.mo(?:$|\?)/ ],
+      },
 
-      if ( id.endsWith( '.mo' ) )
+      async handler( id ) {
+        if ( prefixFilter.test( id ) ) {
+          const deps = [];
+          const result = generateI18nEntryFile( id.substring( prefix.length + 1 ), deps );
+          for ( const dep of deps )
+            this.addWatchFile( dep );
+          return result;
+        }
+
         return await convertMoToJs( id );
+      },
     },
   };
 
