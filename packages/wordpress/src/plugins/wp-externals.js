@@ -31,6 +31,7 @@ export function wpExternals( { prefix = null, injectPolyfill = false, customExte
           name( id, context ) {
             return getChunkName( id, context, config, codeSplitting );
           },
+          debugName: 'wp-externals',
           includeDependenciesRecursively: false,
         };
 
