@@ -18,10 +18,10 @@ const wordPressOptions = {
 let updatedFiles = 0;
 
 export async function updateAllTranslations( config, rootPath ) {
+  const extensions = { jsx: 'js', ...config.extensions };
+
   if ( config.projects != null ) {
     const projects = makeDotNetProjects( config );
-
-    const extensions = { jsx: 'js', ...config.extensions };
 
     for ( const project of projects )
       await updateDotNetTranslations( project, rootPath, config.languages, extensions );
@@ -29,7 +29,7 @@ export async function updateAllTranslations( config, rootPath ) {
     const projects = makeWordPressProjects( config );
 
     for ( const project of projects )
-      await updateWordPressTranslations( project, rootPath, config.languages );
+      await updateWordPressTranslations( project, rootPath, config.languages, extensions );
   }
 
   if ( updatedFiles == 0 )
@@ -69,7 +69,7 @@ async function processDomain( project, rootPath, suffix, pattern, ignore, langua
   }
 }
 
-async function updateWordPressTranslations( project, rootPath, languages ) {
+async function updateWordPressTranslations( project, rootPath, languages, extensions ) {
   const { projectName, projectPath, projectType, translations, filter } = project;
 
   const files = await glob( '**', { cwd: join( rootPath, projectPath ), ignore: [ 'assets/**' ], nodir: true, posix: true } );
@@ -78,7 +78,9 @@ async function updateWordPressTranslations( project, rootPath, languages ) {
   const builder = translationBuilder();
 
   for ( const file of files ) {
-    const ext = extname( file ).slice( 1 ).toLocaleLowerCase();
+    let ext = extname( file ).slice( 1 ).toLocaleLowerCase();
+    if ( extensions[ ext ] != null )
+      ext = extensions[ ext ];
     if ( extractors[ ext ] != null ) {
       const contents = await readFile( join( rootPath, projectPath, file ), 'utf-8' );
       builder.add( `../${file}`, extractors[ ext ]( contents, wordPressOptions ) );
